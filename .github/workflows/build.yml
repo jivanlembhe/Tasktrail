@@ -5,10 +5,10 @@ on:
     branches:
       - main
       - master
+    paths-ignore:
+      - 'python/**'
+      - '.github/workflows/build-python.yml'
   workflow_dispatch:
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build-windows:
@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
 
@@ -39,7 +39,6 @@ jobs:
       - name: Build Windows installers
         run: npm run build:win
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Upload Setup installer
@@ -47,9 +46,11 @@ jobs:
         with:
           name: TaskTrail-Setup-${{ github.run_number }}
           path: dist/*Setup*.exe
+          if-no-files-found: error
 
       - name: Upload Portable exe
         uses: actions/upload-artifact@v4
         with:
           name: TaskTrail-Portable-${{ github.run_number }}
           path: dist/*Portable*.exe
+          if-no-files-found: error
