@@ -947,6 +947,248 @@ svg.ring{transform:rotate(-90deg)}
 .ap-preset i{width:12px;height:12px;border-radius:50%;background:var(--pac);display:inline-block}
 .ap-preset:hover{border-color:var(--indigo)}
 .k-col-head{top:34px}
+
+/* ═══════════════════════════════════════════════════
+   v2.1 ADDITIONS — interactive layout & motion
+═══════════════════════════════════════════════════ */
+
+/* ── Motion: one rule for everyone who prefers less ── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+/* ── Page enter (only when the person navigates) ── */
+.page.enter{animation:pageIn .2s ease-out}
+@keyframes pageIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── Sidebar rail ── */
+.brand{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.rail-toggle{
+  width:26px;height:26px;border-radius:8px;flex-shrink:0;
+  border:1px solid var(--border);background:var(--s2);color:var(--text3);
+  cursor:pointer;font-size:1rem;line-height:1;transition:all .2s;
+}
+.rail-toggle:hover{color:var(--indigo);border-color:var(--indigo)}
+.nav-text{white-space:nowrap}
+.kbd-hint{
+  margin-left:auto;white-space:nowrap;font-size:.6rem;font-weight:700;letter-spacing:.3px;
+  color:var(--text3);border:1px solid var(--border);border-radius:5px;padding:1px 5px;
+}
+.rail-month{display:none}
+.sidebar{transition:width .22s cubic-bezier(.4,0,.2,1),padding .22s}
+.app.rail .sidebar{width:64px;padding:18px 0}
+.app.rail .brand{padding:0 0 16px;flex-direction:column;align-items:center;gap:10px}
+.app.rail .brand-name{font-size:0}
+.app.rail .brand-name::before{content:'T';font-size:1.35rem;-webkit-text-fill-color:var(--indigo)}
+.app.rail .brand-sub,.app.rail .nav-text,.app.rail .nav-badge,.app.rail .kbd-hint,
+.app.rail .nav-section-label,.app.rail .month-grid,.app.rail .year-row{display:none}
+.app.rail .rail-toggle{transform:rotate(180deg)}
+.app.rail .nav-item{justify-content:center;padding:10px 0;border-left-width:3px}
+.app.rail .nav-item .nav-icon{width:auto}
+.app.rail .sidebar-footer{padding:12px 8px 0}
+.app.rail .rail-month{
+  display:block;width:100%;padding:7px 0;border-radius:8px;
+  border:1px solid var(--indigo);background:var(--indigo-dim);color:var(--indigo);
+  font-size:.7rem;font-weight:700;cursor:pointer;font-family:var(--font);
+}
+
+/* ── Quick-add in a column ── */
+.qa .qa-box{display:none}
+.qa.open .qa-open{display:none}
+.qa.open .qa-box{display:block;animation:pageIn .16s ease-out}
+.qa-inp{
+  width:100%;resize:none;padding:9px 11px;border-radius:var(--r2);
+  border:1.5px solid var(--indigo);background:var(--s2);color:var(--text);
+  font-family:var(--font);font-size:.83rem;line-height:1.4;outline:none;
+  box-shadow:var(--glow-i);
+}
+.qa-row{display:flex;gap:6px;align-items:center;margin-top:6px}
+.qa-row .spacer{flex:1}
+.qa-hint{font-size:.62rem;color:var(--text3);white-space:nowrap}
+
+/* ── Column collapse ── */
+.k-col-tools{display:flex;gap:4px;align-items:center}
+.k-col-strip{display:none}
+.k-col{transition:flex-basis .22s cubic-bezier(.4,0,.2,1)}
+.k-col.collapsed{flex:0 0 44px}
+.k-col.collapsed .k-col-head,.k-col.collapsed .k-cards,.k-col.collapsed .qa{display:none}
+.k-col.collapsed .k-col-strip{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:12px 0;border-radius:var(--r);cursor:pointer;
+  background:var(--s2);border:1px solid var(--border);border-top:3px solid var(--col-c);
+  min-height:220px;transition:background .2s;
+}
+.k-col.collapsed .k-col-strip:hover{background:var(--s3)}
+.k-col-strip-label{
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--font-head);font-size:.85rem;font-weight:700;color:var(--text2);
+  white-space:nowrap;
+}
+
+/* ── Density ── */
+body.dense .card{padding:9px 11px}
+body.dense .card-desc,body.dense .card-checklist .cl-item,body.dense .card-labels span{display:none}
+body.dense .card-checklist{margin-top:6px;padding-top:6px}
+body.dense .k-cards{gap:5px}
+
+/* ── Drop landed pulse ── */
+.card.landed{animation:landed .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes landed{
+  0%{transform:scale(1.03);box-shadow:0 0 0 3px var(--indigo-dim),var(--shadow)}
+  100%{transform:scale(1);box-shadow:none}
+}
+.card.flash{animation:cardFlash 1.2s ease-out}
+@keyframes cardFlash{0%,40%{box-shadow:0 0 0 3px var(--indigo)}100%{box-shadow:none}}
+
+/* ── Completion burst ── */
+#burst{position:fixed;inset:0;pointer-events:none;z-index:2000}
+
+/* ── Toast with action ── */
+.toast .tmsg{flex:1}
+.toast-act{
+  border:none;border-radius:8px;padding:4px 10px;cursor:pointer;
+  background:var(--indigo);color:#fff;font-weight:700;font-size:.72rem;font-family:var(--font);
+}
+.toast-act:hover{filter:brightness(1.1)}
+.toast.undo{border-color:var(--border2)}
+
+/* ── Dashboard: attention panel ── */
+.dash-row{grid-template-columns:1fr 1.25fr 1fr}
+@media (max-width:1240px){.dash-row{grid-template-columns:1fr 1fr}.dash-grid{grid-template-columns:repeat(2,1fr)}}
+.panel-sub{font-size:.7rem;color:var(--text3)}
+.attn-list{display:flex;flex-direction:column;gap:6px}
+.attn{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r2);
+  background:var(--s3);border:1px solid var(--border);cursor:pointer;
+  border-left:3px solid var(--indigo);transition:background .15s,transform .15s;
+}
+.attn:hover{background:var(--s4);transform:translateX(2px)}
+.attn.over{border-left-color:var(--rose)}
+.attn.soon{border-left-color:var(--amber)}
+.attn-t{flex:1;font-size:.8rem;font-weight:500;line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attn-when{font-size:.68rem;font-weight:700;white-space:nowrap}
+.attn.over .attn-when{color:var(--rose)}
+.attn.soon .attn-when{color:var(--amber)}
+.attn-col{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.attn-empty{font-size:.8rem;color:var(--text3);padding:10px 0;line-height:1.5}
+.pri-mix{margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
+.pri-mix-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--border);margin:8px 0 6px}
+.pri-mix-bar i{display:block;height:100%;transition:width .6s ease}
+.pri-mix-legend{display:flex;gap:12px;font-size:.68rem;color:var(--text2)}
+.pri-mix-legend b{font-weight:700}
+.bar-col{cursor:pointer}
+.bar-col.cur .bar-fill{opacity:1;box-shadow:0 0 10px rgba(108,138,255,.45)}
+.bar-col.cur .bar-mlabel{color:var(--indigo);font-weight:700}
+.bar-col:hover .bar-mlabel{color:var(--text)}
+
+/* ── Calendar ── */
+#page-calendar.active{gap:14px}
+.cal-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cal-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;min-width:170px}
+.cal-nav{
+  width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);
+  background:var(--s2);color:var(--text2);cursor:pointer;font-size:.9rem;transition:all .15s;
+}
+.cal-nav:hover{border-color:var(--indigo);color:var(--indigo)}
+.cal-stat{font-size:.74rem;color:var(--text3)}
+.cal-stat b{color:var(--text2)}
+.cal-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;align-items:start;flex:1;min-height:0}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;
+}
+.cal-dow{font-size:.66rem;font-weight:700;letter-spacing:.5px;color:var(--text3);text-align:center;padding:0 0 4px}
+.cal-day{
+  min-width:0;min-height:112px;border-radius:var(--r2);padding:6px;
+  background:var(--s2);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:4px;position:relative;
+  transition:border-color .15s,background .15s;
+}
+.cal-day.out{background:transparent;border-style:dashed;opacity:.55}
+.cal-day.today{border-color:var(--indigo);box-shadow:inset 0 0 0 1px var(--indigo)}
+.cal-day.past .cal-num{color:var(--text3)}
+.cal-day.over{background:rgba(108,138,255,.08);border-color:var(--indigo)}
+.cal-num{font-size:.72rem;font-weight:700;color:var(--text2);display:flex;justify-content:space-between;align-items:center}
+.cal-day.today .cal-num{color:var(--indigo)}
+.cal-add{
+  width:18px;height:18px;border-radius:5px;border:none;background:transparent;
+  color:var(--text3);cursor:pointer;font-size:.9rem;line-height:1;opacity:0;transition:opacity .15s,background .15s;
+}
+.cal-day:hover .cal-add{opacity:1}
+.cal-add:hover{background:var(--indigo);color:#fff}
+.cal-chip{
+  font-size:.7rem;font-weight:500;line-height:1.3;padding:3px 7px;border-radius:6px;
+  background:var(--s3);border-left:3px solid var(--col-c,var(--indigo));
+  cursor:grab;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  transition:transform .12s,background .12s;
+}
+.cal-chip:hover{background:var(--s4);transform:translateX(1px)}
+.cal-chip.done{text-decoration:line-through;color:var(--text3);border-left-color:var(--mint)}
+.cal-chip.overdue{background:var(--rose-dim);color:var(--rose)}
+.cal-chip.high::before{content:'● ';color:var(--rose);font-size:.55rem;vertical-align:middle}
+.cal-chip.cl{border-left-style:dashed;cursor:pointer}
+.cal-chip.dragging{opacity:.35}
+.cal-more{font-size:.64rem;color:var(--text3);padding:0 4px;cursor:pointer}
+.cal-more:hover{color:var(--indigo)}
+.cal-side{display:flex;flex-direction:column;gap:12px;position:sticky;top:0}
+.cal-tray{
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px;
+  display:flex;flex-direction:column;gap:5px;min-height:90px;transition:border-color .15s,background .15s;
+}
+.cal-tray.over{border-color:var(--indigo);background:rgba(108,138,255,.06);border-style:dashed}
+.cal-tray-title{font-family:var(--font-head);font-size:.85rem;font-weight:700;display:flex;justify-content:space-between;margin-bottom:4px}
+.cal-tray-title span{font-family:var(--font);font-size:.7rem;font-weight:700;color:var(--text3)}
+.cal-tray-hint{font-size:.7rem;color:var(--text3);line-height:1.45}
+.cal-chip .cal-chip-date{float:right;font-weight:700;color:var(--text3);font-size:.62rem;margin-left:6px}
+
+/* ── Command palette ── */
+.pal-overlay{
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-start;justify-content:center;padding-top:12vh;
+}
+.pal-overlay.open{display:flex}
+.pal{
+  width:640px;max-width:94vw;max-height:70vh;
+  background:var(--s2);border:1px solid var(--border2);border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;
+  animation:palIn .18s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes palIn{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:none}}
+.pal-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.pal-head .ico{color:var(--text3);font-size:1rem}
+.pal-inp{
+  flex:1;border:none;outline:none;background:transparent;color:var(--text);
+  font-family:var(--font);font-size:1rem;
+}
+.pal-inp::placeholder{color:var(--text3)}
+.pal-list{overflow-y:auto;padding:6px;flex:1}
+.pal-sec{font-size:.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 12px 4px}
+.pal-item{
+  display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;cursor:pointer;
+  font-size:.86rem;
+}
+.pal-item .pi{width:22px;text-align:center;font-size:1rem;flex-shrink:0}
+.pal-item .pt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pal-item .pm{font-size:.68rem;color:var(--text3);white-space:nowrap}
+.pal-item .pk{font-size:.62rem;color:var(--text3);border:1px solid var(--border);border-radius:5px;padding:1px 6px;white-space:nowrap}
+.pal-item.active{background:var(--indigo-dim);color:var(--text)}
+.pal-item.active .pm{color:var(--indigo)}
+.pal-item mark{background:transparent;color:var(--indigo);font-weight:700}
+.pal-empty{padding:26px;text-align:center;color:var(--text3);font-size:.82rem;line-height:1.5}
+.pal-foot{display:flex;gap:14px;padding:8px 16px;border-top:1px solid var(--border);font-size:.66rem;color:var(--text3)}
+.pal-foot b{font-weight:700;color:var(--text2)}
+
+/* ── Shortcuts sheet ── */
+.kbd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px}
+.kbd-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:.8rem}
+.kbd-row kbd{
+  font-family:var(--font);font-size:.68rem;font-weight:700;color:var(--text2);
+  border:1px solid var(--border2);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--s3);
+  white-space:nowrap;
+}
+
+/* ── Focus visibility (keyboard users) ── */
+.btn:focus-visible,.nav-item:focus-visible,.card:focus-visible,.cal-chip:focus-visible,.m-btn:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -954,33 +1196,47 @@ svg.ring{transform:rotate(-90deg)}
 <!-- ── SIDEBAR ─────────────────────────── -->
 <nav class="sidebar">
   <div class="brand">
-    <div class="brand-name">TaskTrail</div>
-    <div class="brand-sub">Plan · Do · Track</div>
+    <div>
+      <div class="brand-name">TaskTrail</div>
+      <div class="brand-sub">Plan · Do · Track</div>
+    </div>
+    <button class="rail-toggle" id="railToggle" onclick="toggleRail()" title="Collapse sidebar (Ctrl+B)">‹</button>
   </div>
 
   <div class="nav-section-label">Workspace</div>
-  <div class="nav-item active" onclick="nav('dashboard',this)">
-    <span class="nav-icon">◈</span> Dashboard
+  <div class="nav-item active" data-page="dashboard" title="Dashboard (Alt+1)" onclick="nav('dashboard',this)">
+    <span class="nav-icon">◈</span><span class="nav-text">Dashboard</span>
   </div>
-  <div class="nav-item" onclick="nav('kanban',this)">
-    <span class="nav-icon">⊞</span> Task Board
+  <div class="nav-item" data-page="kanban" title="Task Board (Alt+2)" onclick="nav('kanban',this)">
+    <span class="nav-icon">⊞</span><span class="nav-text">Task Board</span>
     <span class="nav-badge" id="nb-kanban">0</span>
   </div>
-  <div class="nav-item" onclick="nav('checklist',this)">
-    <span class="nav-icon">☑</span> Task Checklist
+  <div class="nav-item" data-page="checklist" title="Task Checklist (Alt+3)" onclick="nav('checklist',this)">
+    <span class="nav-icon">☑</span><span class="nav-text">Task Checklist</span>
     <span class="nav-badge" id="nb-checklist">0</span>
+  </div>
+  <div class="nav-item" data-page="calendar" title="Calendar (Alt+4)" onclick="nav('calendar',this)">
+    <span class="nav-icon">▦</span><span class="nav-text">Calendar</span>
+    <span class="nav-badge" id="nb-calendar" style="background:var(--rose);display:none">0</span>
   </div>
 
   <div class="nav-section-label" style="margin-top:10px">Tools</div>
-  <div class="nav-item" onclick="openMigratePanel()">
-    <span class="nav-icon">🔄</span> Month Rollover
+  <div class="nav-item" title="Search & commands (Ctrl+K)" onclick="openPalette()">
+    <span class="nav-icon">⌘</span><span class="nav-text">Search</span>
+    <span class="kbd-hint">Ctrl K</span>
+  </div>
+  <div class="nav-item" title="Month Rollover" onclick="openMigratePanel()">
+    <span class="nav-icon">🔄</span><span class="nav-text">Month Rollover</span>
     <span class="nav-badge" id="nb-migrate" style="display:none;background:var(--amber)">!</span>
   </div>
-  <div class="nav-item" onclick="openBackupPanel()">
-    <span class="nav-icon">💾</span> Backup &amp; Restore
+  <div class="nav-item" title="Backup &amp; Restore" onclick="openBackupPanel()">
+    <span class="nav-icon">💾</span><span class="nav-text">Backup &amp; Restore</span>
   </div>
-  <div class="nav-item" onclick="openAppearance()">
-    <span class="nav-icon">🎨</span> Appearance
+  <div class="nav-item" title="Appearance" onclick="openAppearance()">
+    <span class="nav-icon">🎨</span><span class="nav-text">Appearance</span>
+  </div>
+  <div class="nav-item" title="Keyboard shortcuts (?)" onclick="openShortcuts()">
+    <span class="nav-icon">⌨</span><span class="nav-text">Shortcuts</span>
   </div>
 
   <div class="sidebar-footer">
@@ -990,6 +1246,7 @@ svg.ring{transform:rotate(-90deg)}
       <button class="year-btn" onclick="switchYear(1)" title="Next year">▶</button>
     </div>
     <div class="month-grid" id="monthGrid"></div>
+    <button class="rail-month" id="railMonth" onclick="toggleRail()" title="Expand sidebar to change month">Sep</button>
   </div>
 </nav>
 
@@ -1011,6 +1268,11 @@ svg.ring{transform:rotate(-90deg)}
   <div class="page active" id="page-dashboard">
     <div class="dash-grid" id="kpiGrid"></div>
     <div class="dash-row">
+      <div class="panel" id="attentionPanel">
+        <div class="panel-header"><div class="panel-title">Needs attention</div><span class="panel-sub" id="attentionSub"></span></div>
+        <div class="attn-list" id="attentionList"></div>
+        <div class="pri-mix" id="priMix"></div>
+      </div>
       <div class="panel">
         <div class="panel-header"><div class="panel-title">Recent Activity</div></div>
         <div class="timeline" id="activityFeed"></div>
@@ -1028,6 +1290,9 @@ svg.ring{transform:rotate(-90deg)}
 
   <!-- ── TASK BOARD PAGE ── -->
   <div class="page" id="page-kanban"></div>
+
+  <!-- ── CALENDAR PAGE ── -->
+  <div class="page" id="page-calendar"></div>
 
   <!-- ── CHECKLIST PAGE ── -->
   <div class="page" id="page-checklist">
@@ -1315,7 +1580,7 @@ function moveCard(cid,fromCol,toCol,beforeId){
   dst.splice(at,0,card);
   if(fromCol!==toCol){
     card.done=(toCol==='done');
-    if(toCol==='done') card.completedAt=new Date().toISOString();
+    if(toCol==='done'){ card.completedAt=new Date().toISOString(); celebrate(document.getElementById('kc-'+cid)); }
     logAct(card,`Moved from ${colLabel(fromCol)} to ${colLabel(toCol)}`);
   }
   return card;
@@ -1324,13 +1589,15 @@ function moveCard(cid,fromCol,toCol,beforeId){
 /* ═══════════════════════════════════════════════════
    NAVIGATION / YEAR / MONTH
 ═══════════════════════════════════════════════════ */
-const TITLES={dashboard:'Dashboard',kanban:'Task Board',checklist:'Task Checklist'};
+const TITLES={dashboard:'Dashboard',kanban:'Task Board',checklist:'Task Checklist',calendar:'Calendar'};
 function nav(page,el){
+  const changed=curPage!==page;
   curPage=page;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(el) el.classList.add('active'); else { const i={dashboard:0,kanban:1,checklist:2}[page]; document.querySelectorAll('.nav-item')[i].classList.add('active'); }
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
+  (el||document.querySelector(`.nav-item[data-page="${page}"]`))?.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active','enter'));
+  const pg=document.getElementById('page-'+page);
+  pg.classList.add('active'); if(changed) pg.classList.add('enter');
   document.getElementById('pageTitle').textContent=TITLES[page];
   render();
 }
@@ -1339,12 +1606,14 @@ function render(){
   if(curPage==='dashboard') renderDash();
   if(curPage==='kanban')    renderKanban();
   if(curPage==='checklist') renderChecklist();
+  if(curPage==='calendar')  renderCalendar();
 }
 function buildMonthGrid(){
   document.getElementById('monthGrid').innerHTML=MONTHS.map((m,i)=>`
     <button class="m-btn ${i===curMonth?'active':''}" onclick="switchMonth(${i})">${m}</button>`).join('');
   document.getElementById('pageMonth').textContent=`${MONTHS_LONG[curMonth]} ${curYear}`;
   document.getElementById('yearVal').textContent=curYear;
+  const rm=document.getElementById('railMonth'); if(rm) rm.textContent=MONTHS[curMonth];
 }
 function switchMonth(i){ curMonth=i; closeDetail(); buildMonthGrid(); render(); }
 function switchYear(delta){
@@ -1363,6 +1632,8 @@ function updateBadges(){
   const kd=db.kanban[curMonth];
   document.getElementById('nb-kanban').textContent=COLS.reduce((a,c)=>a+(kd[c.id]||[]).length,0);
   document.getElementById('nb-checklist').textContent=(db.checklist[curMonth]||[]).reduce((a,g)=>a+g.tasks.length,0);
+  const od=COLS.filter(c=>c.id!=='done').flatMap(c=>kd[c.id]||[]).filter(c=>isOverdue(c.dueDate,c.done)).length;
+  const nbc=document.getElementById('nb-calendar'); nbc.textContent=od; nbc.style.display=od?'':'none';
   if(typeof checkMigrateBadge==='function') checkMigrateBadge();
 }
 
@@ -1416,8 +1687,10 @@ function renderDash(){
   const maxV=Math.max(1,...MONTHS.map((_,i)=>monthTotal(i)));
   document.getElementById('barChart').innerHTML=MONTHS.map((m,i)=>{
     const v=monthTotal(i); const h=Math.max(4,Math.round(v/maxV*72));
-    return `<div class="bar-col"><div class="bar-fill" style="height:${h}px" title="${m} ${curYear}: ${v} tasks"></div><div class="bar-mlabel">${m.slice(0,1)}</div></div>`;
+    return `<div class="bar-col ${i===curMonth?'cur':''}" onclick="switchMonth(${i})" title="${m} ${curYear}: ${v} tasks — click to open"><div class="bar-fill" style="height:${h}px"></div><div class="bar-mlabel">${m.slice(0,1)}</div></div>`;
   }).join('');
+  renderAttention(kd);
+  animateDash();
 }
 function kpiCard(label,val,sub,icon,cls,pct){
   const barColor=cls==='blue'?'var(--indigo)':cls==='amber'?'var(--amber)':cls==='violet'?'var(--violet)':'var(--mint)';
@@ -1442,6 +1715,7 @@ function renderKanban(){
       <div class="k-labels" id="kLabelChips">${labelChipsHTML(boardFilter.labels,'kToggleLabelFilter')}</div>
       ${(boardFilter.q||boardFilter.pri||boardFilter.labels.size)?`<button class="btn btn-g btn-sm" onclick="kClearFilter()">Clear filters</button>`:''}
       <span class="spacer"></span>
+      <button class="btn btn-g btn-sm" onclick="toggleDensity()" title="Toggle compact cards">${document.body.classList.contains('dense')?'▤ Comfortable':'▥ Compact'}</button>
       <button class="btn btn-g btn-sm" onclick="openLabelManager()">🏷 Labels</button>
       <button class="btn btn-g btn-sm" onclick="openColModal()">+ Column</button>
     </div>
@@ -1450,19 +1724,32 @@ function renderKanban(){
 }
 function renderBoard(){
   document.getElementById('board').innerHTML=COLS.map(col=>`
-    <div class="k-col" data-col="${col.id}">
-      <div class="k-col-head">
+    <div class="k-col ${colCollapsed.has(col.id)?'collapsed':''}" data-col="${col.id}" style="--col-c:${col.color}">
+      <div class="k-col-head" ondblclick="toggleColCollapse('${col.id}')">
         <div class="k-col-title"><span class="k-col-dot" style="background:${col.color}"></span>${esc(col.icon||'')} ${esc(col.label)}</div>
-        <div style="display:flex;gap:6px;align-items:center">
+        <div class="k-col-tools" ondblclick="event.stopPropagation()">
           <span class="k-count" id="kc-${col.id}">${(db.kanban[curMonth][col.id]||[]).length}</span>
+          <button class="k-col-menu" title="${colCollapsed.has(col.id)?'Expand column':'Collapse column'}" onclick="toggleColCollapse('${col.id}')">${colCollapsed.has(col.id)?'›':'‹'}</button>
           <button class="k-col-menu" title="Column settings" onclick="openColModal('${col.id}')">⋯</button>
         </div>
       </div>
+      <div class="k-col-strip" onclick="toggleColCollapse('${col.id}')" title="Expand ${esc(col.label)}"><span class="k-count">${(db.kanban[curMonth][col.id]||[]).length}</span><span>${esc(col.icon||'')}</span><span class="k-col-strip-label">${esc(col.label)}</span></div>
       <div class="k-cards" id="ka-${col.id}"
            ondragover="kDragOver(event,'${col.id}')" ondragleave="kDragLeave(event,'${col.id}')" ondrop="kDrop(event,'${col.id}')">
         ${renderKCards(col.id)}
       </div>
-      <button class="add-k-btn" onclick="openAdd('${col.id}')">+ Add Task</button>
+      <div class="qa" id="qa-${col.id}">
+        <button class="add-k-btn qa-open" onclick="qaOpen('${col.id}')">+ Add Task</button>
+        <div class="qa-box">
+          <textarea class="qa-inp" id="qai-${col.id}" rows="2" placeholder="Task title…" onkeydown="qaKey(event,'${col.id}')"></textarea>
+          <div class="qa-row">
+            <span class="qa-hint" title="Type these in the title">!high &nbsp;#label &nbsp;@tomorrow</span>
+            <span class="spacer"></span>
+            <button class="btn btn-g btn-sm" onclick="qaFull('${col.id}')" title="Open the full form (Shift+Enter)">Details</button>
+            <button class="btn btn-p btn-sm" onclick="qaSubmit('${col.id}')">Add</button>
+          </div>
+        </div>
+      </div>
     </div>`).join('')+`
     <div class="k-col k-col-add"><button class="add-k-btn" onclick="openColModal()">+ Add column</button></div>`;
 }
@@ -1542,10 +1829,14 @@ function kSubToggle(cid,colId,sid){
   save(); renderKanban(); if(detailRef&&detailRef.cid===cid) renderDetail();
 }
 function kDel(cid,colId){
-  if(!confirm('Delete this task? This cannot be undone.')) return;
-  db.kanban[curMonth][colId]=(db.kanban[curMonth][colId]||[]).filter(c=>c.id!==cid);
+  const list=db.kanban[curMonth][colId]||[]; const idx=list.findIndex(c=>c.id===cid); if(idx<0) return;
+  const [card]=list.splice(idx,1); const y=curYear,m=curMonth;
   if(detailRef&&detailRef.cid===cid) closeDetail();
-  save(); renderKanban();
+  save(); if(curPage==='kanban') renderKanban(); else render();
+  offerUndo(`Deleted “${card.title}”`,()=>{
+    ensureYear(y); const L=db.years[y].kanban[m][colId]=db.years[y].kanban[m][colId]||[];
+    L.splice(Math.min(idx,L.length),0,card); save(); render(); markLanded(card.id);
+  });
 }
 
 /* drag & drop — between columns and reorder within a column */
@@ -1588,7 +1879,7 @@ function kDrop(e,tgt){
   if(t.beforeId===cid) return;
   const card=moveCard(cid,src,tgt,t.beforeId);
   if(!card) return;
-  save(); renderKanban();
+  save(); renderKanban(); markLanded(cid);
   if(detailRef&&detailRef.cid===cid){ detailRef.colId=tgt; renderDetail(); }
   if(tgt==='done'&&src!=='done') toast('✅ Task completed!','ok');
 }
@@ -1881,11 +2172,18 @@ function clToggleSub(gid,tid,sid){
   if(t.subs.length&&t.subs.every(s=>s.done)){t.done=true;toast('🎉 All sub-tasks done!','ok')}
   save(); renderChecklist();
 }
-function clDelTask(gid,tid){ const g=db.checklist[curMonth].find(x=>x.id===gid); if(g) g.tasks=g.tasks.filter(t=>t.id!==tid); save(); renderChecklist(); }
+function clDelTask(gid,tid){
+  const g=db.checklist[curMonth].find(x=>x.id===gid); if(!g) return;
+  const idx=g.tasks.findIndex(t=>t.id===tid); if(idx<0) return;
+  const [t]=g.tasks.splice(idx,1); const y=curYear,m=curMonth;
+  save(); render();
+  offerUndo(`Deleted “${t.title}”`,()=>{ const G=(db.years[y]?.checklist[m]||[]).find(x=>x.id===gid); if(G){ G.tasks.splice(Math.min(idx,G.tasks.length),0,t); } else { db.years[y].checklist[m].push({id:gid,name:'Restored',tasks:[t]}); } save(); render(); });
+}
 function delClGroup(gid){
-  const g=db.checklist[curMonth].find(x=>x.id===gid);
-  if(g&&g.tasks.length&&!confirm(`Delete group "${g.name}" and its ${g.tasks.length} task(s)?`)) return;
-  db.checklist[curMonth]=db.checklist[curMonth].filter(x=>x.id!==gid); save(); renderChecklist();
+  const L=db.checklist[curMonth]; const idx=L.findIndex(x=>x.id===gid); if(idx<0) return;
+  const [g]=L.splice(idx,1); const y=curYear,m=curMonth;
+  save(); renderChecklist();
+  offerUndo(`Deleted group “${g.name}”${g.tasks.length?` and ${g.tasks.length} task${g.tasks.length>1?'s':''}`:''}`,()=>{ const LL=db.years[y].checklist[m]; LL.splice(Math.min(idx,LL.length),0,g); save(); render(); });
 }
 function openClTaskEdit(gid,tid){
   const g=db.checklist[curMonth].find(x=>x.id===gid); const t=g&&g.tasks.find(x=>x.id===tid); if(!t)return;
@@ -1923,14 +2221,14 @@ function openRenameGroup(gid){
 /* ═══════════════════════════════════════════════════
    ADD / EDIT CARD MODAL
 ═══════════════════════════════════════════════════ */
-function openAdd(colHint){
+function openAdd(colHint,preset){
   editing=null; addColHint=colHint||'todo';
   fillColSelect();
-  document.getElementById('f-title').value='';
+  document.getElementById('f-title').value=(preset&&preset.title)||'';
   document.getElementById('f-desc').value='';
   document.getElementById('f-col').value=colById(addColHint)?addColHint:'todo';
-  document.getElementById('f-pri').value='med';
-  document.getElementById('f-date').value='';
+  document.getElementById('f-pri').value=(preset&&preset.priority)||'med';
+  document.getElementById('f-date').value=(preset&&preset.date)||'';
   tempSubs=[]; tempLabels=new Set(); renderSubList(); renderFormLabels();
   document.getElementById('modalH').textContent='New Task';
   document.getElementById('cardSaveBtn').textContent='Save Task';
@@ -2487,11 +2785,13 @@ function fmtDT(iso){ const d=new Date(iso); if(isNaN(d))return''; return d.toLoc
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function isOverdue(d,done){ if(!d||done)return false; const due=new Date(d+'T00:00'); if(isNaN(due))return false; const t=new Date(); t.setHours(0,0,0,0); return due<t; }
 let _toastT;
-function toast(msg,type=''){
+function toast(msg,type='',action=null,ms=2600){
   document.querySelectorAll('.toast').forEach(t=>t.remove()); clearTimeout(_toastT);
   const t=document.createElement('div'); t.className='toast '+(type||'');
-  t.innerHTML=`<span class="ti">${type==='ok'?'✓':'ℹ'}</span>${msg}`;
-  document.body.appendChild(t); _toastT=setTimeout(()=>t.remove(),2600);
+  t.innerHTML=`<span class="ti">${type==='ok'?'✓':type==='undo'?'🗑':'ℹ'}</span><span class="tmsg">${msg}</span>`;
+  if(action){ const b=document.createElement('button'); b.className='toast-act'; b.textContent=action.label; b.onclick=()=>{ t.remove(); clearTimeout(_toastT); action.fn(); }; t.appendChild(b); }
+  document.body.appendChild(t); _toastT=setTimeout(()=>t.remove(),ms);
+  return t;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2778,11 +3078,352 @@ function toggleTheme(){ applyTheme(document.documentElement.classList.contains('
 function loadTheme(){ let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(e){} applyTheme(saved||'system'); }
 window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{ let saved=null; try{ saved=localStorage.getItem(THEME_KEY); }catch(e){} if(!saved||saved==='system') applyTheme('system'); });
 
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — UI PREFERENCES (per machine, not in the data file)
+═══════════════════════════════════════════════════ */
+const UI_KEY='tt_ui';
+let uiPrefs={rail:false,dense:false,cols:[]};
+let colCollapsed=new Set();
+function loadUiPrefs(){
+  try{ Object.assign(uiPrefs,JSON.parse(localStorage.getItem(UI_KEY)||'{}')); }catch(_){}
+  colCollapsed=new Set(uiPrefs.cols||[]);
+  document.querySelector('.app').classList.toggle('rail',!!uiPrefs.rail);
+  document.body.classList.toggle('dense',!!uiPrefs.dense);
+  const rt=document.getElementById('railToggle'); if(rt) rt.title=(uiPrefs.rail?'Expand':'Collapse')+' sidebar (Ctrl+B)';
+}
+function saveUiPrefs(){ uiPrefs.cols=[...colCollapsed]; try{ localStorage.setItem(UI_KEY,JSON.stringify(uiPrefs)); }catch(_){} }
+function toggleRail(){ uiPrefs.rail=!uiPrefs.rail; saveUiPrefs(); loadUiPrefs(); }
+function toggleDensity(){ uiPrefs.dense=!uiPrefs.dense; saveUiPrefs(); loadUiPrefs(); if(curPage==='kanban') renderKanban(); }
+function toggleColCollapse(id){ colCollapsed.has(id)?colCollapsed.delete(id):colCollapsed.add(id); saveUiPrefs(); renderBoard(); }
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — MOTION HELPERS (answer an action, never decorate)
+═══════════════════════════════════════════════════ */
+const REDUCED=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function markLanded(cid){ const el=document.getElementById('kc-'+cid); if(!el) return; el.classList.add('landed'); el.addEventListener('animationend',()=>el.classList.remove('landed'),{once:true}); }
+function markFlash(cid){ const el=document.getElementById('kc-'+cid); if(!el) return; el.scrollIntoView({block:'center',behavior:REDUCED()?'auto':'smooth'}); el.classList.add('flash'); el.addEventListener('animationend',()=>el.classList.remove('flash'),{once:true}); }
+let _burstAt=0;
+function celebrate(fromEl){
+  if(REDUCED()) return;
+  const now=Date.now(); if(now-_burstAt<400) return; _burstAt=now;
+  let cv=document.getElementById('burst');
+  if(!cv){ cv=document.createElement('canvas'); cv.id='burst'; document.body.appendChild(cv); }
+  cv.width=innerWidth; cv.height=innerHeight;
+  const ctx=cv.getContext('2d');
+  const cs=getComputedStyle(document.documentElement);
+  const colors=['--indigo','--mint','--amber','--violet','--rose'].map(v=>cs.getPropertyValue(v).trim()||'#6c8aff');
+  let ox=innerWidth/2, oy=innerHeight*.3;
+  if(fromEl){ const r=fromEl.getBoundingClientRect(); ox=r.left+r.width/2; oy=r.top+r.height/2; }
+  const P=Array.from({length:42},(_,i)=>{ const a=(Math.PI*2*i/42)+Math.random()*.4, s=4+Math.random()*6;
+    return {x:ox,y:oy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,r:2+Math.random()*3,c:colors[i%colors.length],rot:Math.random()*6,vr:(Math.random()-.5)*.4}; });
+  const t0=performance.now(), dur=850;
+  (function frame(t){
+    const k=(t-t0)/dur; ctx.clearRect(0,0,cv.width,cv.height);
+    if(k>=1) return;
+    P.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=.22; p.vx*=.985; p.rot+=p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.globalAlpha=1-k; ctx.fillStyle=p.c;
+      ctx.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2); ctx.restore(); });
+    requestAnimationFrame(frame);
+  })(t0);
+}
+function offerUndo(msg,fn){ toast(msg,'undo',{label:'Undo',fn},6500); }
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — QUICK ADD  (!high · #label · @tomorrow)
+═══════════════════════════════════════════════════ */
+function isoDate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+const DOW=['sun','mon','tue','wed','thu','fri','sat'];
+function parseDateToken(tok){
+  const t=tok.toLowerCase(); const today=new Date(); today.setHours(0,0,0,0);
+  if(t==='today'||t==='tod') return isoDate(today);
+  if(t==='tomorrow'||t==='tmr'||t==='tom'){ today.setDate(today.getDate()+1); return isoDate(today); }
+  if(/^\+\d+$/.test(t)){ today.setDate(today.getDate()+parseInt(t.slice(1),10)); return isoDate(today); }
+  const di=DOW.findIndex(d=>t.startsWith(d)); if(di>=0){ today.setDate(today.getDate()+((di-today.getDay()+7)%7)); return isoDate(today); }
+  if(/^\d{4}-\d{2}-\d{2}$/.test(t)) return t;
+  if(/^\d{1,2}$/.test(t)){ const d=parseInt(t,10); const last=new Date(curYear,curMonth+1,0).getDate(); if(d>=1&&d<=last) return isoDate(new Date(curYear,curMonth,d)); }
+  return null;
+}
+function parseQuick(text){
+  const out={title:'',priority:'med',dueDate:'',labels:[]}; const keep=[];
+  text.trim().split(/\s+/).forEach(w=>{
+    const m=w.match(/^(!|#|@)(.+)$/);
+    if(!m){ keep.push(w); return; }
+    const [,sig,val]=m; const v=val.toLowerCase();
+    if(sig==='!'){ if(['high','h','hi','urgent'].includes(v)) out.priority='high'; else if(['low','l'].includes(v)) out.priority='low'; else if(['med','m','medium'].includes(v)) out.priority='med'; else keep.push(w); return; }
+    if(sig==='@'){ const d=parseDateToken(val); if(d) out.dueDate=d; else keep.push(w); return; }
+    if(sig==='#'){ let l=db.labels.find(x=>x.name.toLowerCase()===v); if(!l){ l={id:uid(),name:val,color:LABEL_PALETTE[db.labels.length%LABEL_PALETTE.length]}; db.labels.push(l); } if(!out.labels.includes(l.id)) out.labels.push(l.id); return; }
+  });
+  out.title=keep.join(' ').trim(); return out;
+}
+function qaOpen(col){
+  document.querySelectorAll('.qa.open').forEach(q=>q.classList.remove('open'));
+  const q=document.getElementById('qa-'+col); if(!q) return; q.classList.add('open');
+  const i=document.getElementById('qai-'+col); i.value=''; setTimeout(()=>i.focus(),20);
+}
+function qaClose(col){ document.getElementById('qa-'+col)?.classList.remove('open'); }
+function qaKey(e,col){
+  if(e.key==='Escape'){ e.preventDefault(); qaClose(col); return; }
+  if(e.key==='Enter'){ e.preventDefault(); e.shiftKey?qaFull(col):qaSubmit(col); }
+}
+function qaSubmit(col){
+  const inp=document.getElementById('qai-'+col); const p=parseQuick(inp.value);
+  if(!p.title){ inp.focus(); return; }
+  const card={ id:uid(), title:p.title, desc:'', priority:p.priority, dueDate:p.dueDate, done:col==='done',
+    subs:[], labels:p.labels, comments:[], activity:[], createdAt:new Date().toISOString(), month:MONTHS[curMonth], year:curYear };
+  logAct(card,`Created in ${colLabel(col)}`);
+  (db.kanban[curMonth][col]=db.kanban[curMonth][col]||[]).unshift(card);
+  save(); renderBoard(); markLanded(card.id); qaOpen(col);
+  toast(`Added “${p.title}”${p.dueDate?' · due '+fmt(p.dueDate):''}`,'ok');
+}
+function qaFull(col){
+  const p=parseQuick(document.getElementById('qai-'+col)?.value||'');
+  qaClose(col); openAdd(col,{title:p.title,priority:p.priority,date:p.dueDate});
+  tempLabels=new Set(p.labels); renderFormLabels();
+}
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — DASHBOARD: needs attention + animated numbers
+═══════════════════════════════════════════════════ */
+function dayDiff(iso){ const d=new Date(iso+'T00:00'); if(isNaN(d)) return null; const t=new Date(); t.setHours(0,0,0,0); return Math.round((d-t)/86400000); }
+function whenLabel(diff){
+  if(diff<0) return `${-diff}d overdue`;
+  if(diff===0) return 'Today'; if(diff===1) return 'Tomorrow';
+  const d=new Date(); d.setDate(d.getDate()+diff);
+  return diff<=6?d.toLocaleDateString('en-US',{weekday:'short'}):fmt(isoDate(d));
+}
+function renderAttention(kd){
+  const items=[];
+  COLS.filter(c=>c.id!=='done').forEach(c=>(kd[c.id]||[]).forEach(k=>{ if(k.dueDate&&!k.done){ const df=dayDiff(k.dueDate); if(df!==null&&df<=7) items.push({type:'card',id:k.id,colId:c.id,color:c.color,title:k.title,diff:df,pri:k.priority}); } }));
+  (db.checklist[curMonth]||[]).forEach(g=>g.tasks.forEach(t=>{ if(t.dueDate&&!t.done){ const df=dayDiff(t.dueDate); if(df!==null&&df<=7) items.push({type:'cl',gid:g.id,id:t.id,color:'var(--violet)',title:t.title,diff:df,pri:t.priority,group:g.name}); } }));
+  items.sort((a,b)=>a.diff-b.diff||(a.pri==='high'?-1:1));
+  const over=items.filter(i=>i.diff<0).length, soon=items.length-over;
+  document.getElementById('attentionSub').textContent=items.length?`${over} overdue · ${soon} due this week`:'';
+  document.getElementById('attentionList').innerHTML=items.length?items.slice(0,8).map(i=>`
+    <div class="attn ${i.diff<0?'over':'soon'}" onclick="${i.type==='card'?`nav('kanban');openDetail('${i.id}','${i.colId}')`:`nav('checklist');openClTaskEdit('${i.gid}','${i.id}')`}" title="${i.type==='cl'?esc(i.group):esc(colLabel(i.colId))}">
+      <span class="attn-col" style="background:${i.color}"></span>
+      <span class="attn-t">${i.type==='cl'?'☑ ':''}${esc(i.title)}</span>
+      <span class="attn-when">${whenLabel(i.diff)}</span>
+    </div>`).join('')+(items.length>8?`<div class="attn-empty" style="padding:4px 0 0">+${items.length-8} more in the calendar</div>`:'')
+    :`<div class="attn-empty">Nothing is overdue or due in the next 7 days.<br>Add due dates to tasks and they show up here.</div>`;
+  const open=COLS.filter(c=>c.id!=='done').flatMap(c=>kd[c.id]||[]);
+  const n={high:0,med:0,low:0}; open.forEach(c=>{ n[c.priority]=(n[c.priority]||0)+1; });
+  const tot=open.length||1;
+  document.getElementById('priMix').innerHTML=open.length?`
+    <div class="panel-sub">Open tasks by priority</div>
+    <div class="pri-mix-bar"><i style="width:${n.high/tot*100}%;background:var(--rose)"></i><i style="width:${n.med/tot*100}%;background:var(--amber)"></i><i style="width:${n.low/tot*100}%;background:var(--mint)"></i></div>
+    <div class="pri-mix-legend"><span><b style="color:var(--rose)">${n.high}</b> high</span><span><b style="color:var(--amber)">${n.med}</b> medium</span><span><b style="color:var(--mint)">${n.low}</b> low</span></div>`:'';
+}
+function animateDash(){
+  document.querySelectorAll('.ring-fg').forEach(r=>{
+    const target=r.getAttribute('stroke-dashoffset'), full=r.getAttribute('stroke-dasharray');
+    if(REDUCED()) return;
+    r.style.transition='none'; r.style.strokeDashoffset=full;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ r.style.transition=''; r.style.strokeDashoffset=target; }));
+  });
+  if(REDUCED()) return;
+  document.querySelectorAll('.kpi-val').forEach(el=>{
+    const n=parseInt(el.textContent,10); if(!n) return;
+    const t0=performance.now(), dur=520;
+    (function step(t){ const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3); el.textContent=Math.round(n*e); if(k<1) requestAnimationFrame(step); else el.textContent=n; })(t0);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — CALENDAR
+═══════════════════════════════════════════════════ */
+let calDrag=null, calExpanded=new Set();
+function goToday(){ const now=new Date(); if(curYear!==now.getFullYear()){ curYear=now.getFullYear(); YEAR=curYear; ensureYear(curYear); } switchMonth(now.getMonth()); }
+function stepMonth(d){
+  const nm=curMonth+d;
+  if(nm>=0&&nm<=11){ switchMonth(nm); return; }
+  const before=curYear; switchYear(d); if(curYear!==before) switchMonth(nm<0?11:0);
+}
+function renderCalendar(){
+  const page=document.getElementById('page-calendar'); const kd=db.kanban[curMonth];
+  const y=curYear, m=curMonth; const first=new Date(y,m,1); const startDow=(first.getDay()+6)%7;
+  const daysIn=new Date(y,m+1,0).getDate(); const cells=Math.ceil((startDow+daysIn)/7)*7;
+  const gridStart=new Date(y,m,1-startDow); const gridEnd=new Date(y,m,1-startDow+cells-1);
+  const todayIso=isoDate(new Date());
+  const byDate={}, unscheduled=[], other=[];
+  COLS.forEach(c=>(kd[c.id]||[]).forEach(k=>{
+    const item={type:'card',id:k.id,colId:c.id,color:c.color,title:k.title,done:k.done||c.id==='done',pri:k.priority,date:k.dueDate};
+    if(!k.dueDate){ if(!item.done) unscheduled.push(item); return; }
+    const d=new Date(k.dueDate+'T00:00'); if(isNaN(d)) return;
+    if(d<gridStart||d>gridEnd){ other.push(item); return; }
+    (byDate[k.dueDate]=byDate[k.dueDate]||[]).push(item);
+  }));
+  (db.checklist[m]||[]).forEach(g=>g.tasks.forEach(t=>{ if(!t.dueDate) return; const d=new Date(t.dueDate+'T00:00'); if(isNaN(d)||d<gridStart||d>gridEnd) return;
+    (byDate[t.dueDate]=byDate[t.dueDate]||[]).push({type:'cl',gid:g.id,id:t.id,color:'var(--violet)',title:t.title,done:t.done,pri:t.priority,date:t.dueDate}); }));
+  const scheduled=Object.values(byDate).reduce((a,l)=>a+l.length,0);
+  const chip=i=>i.type==='card'
+    ?`<div class="cal-chip ${i.done?'done':''} ${!i.done&&i.date&&i.date<todayIso?'overdue':''} ${i.pri==='high'?'high':''}" style="--col-c:${i.color}" draggable="true" tabindex="0" title="${esc(i.title)} — drag to reschedule"
+        ondragstart="calDragStart(event,'${i.id}','${i.colId}')" ondragend="calDragEnd()" onclick="openDetail('${i.id}','${i.colId}')" onkeydown="if(event.key==='Enter')openDetail('${i.id}','${i.colId}')">${i.date&&i.type==='card'&&other.includes(i)?`<span class="cal-chip-date">${fmt(i.date)}</span>`:''}${esc(i.title)}</div>`
+    :`<div class="cal-chip cl ${i.done?'done':''} ${!i.done&&i.date&&i.date<todayIso?'overdue':''}" style="--col-c:${i.color}" title="Checklist task — click to edit" onclick="openClTaskEdit('${i.gid}','${i.id}')">☑ ${esc(i.title)}</div>`;
+  let days='';
+  for(let i=0;i<cells;i++){
+    const d=new Date(y,m,1-startDow+i); const iso=isoDate(d); const out=d.getMonth()!==m;
+    const list=byDate[iso]||[]; const exp=calExpanded.has(iso); const shown=exp?list:list.slice(0,4);
+    days+=`<div class="cal-day ${out?'out':''} ${iso===todayIso?'today':''} ${iso<todayIso?'past':''}" data-date="${iso}"
+        ondragover="calOver(event,this)" ondragleave="calLeave(event,this)" ondrop="calDrop(event,'${iso}')" ondblclick="if(event.target===this)openAdd('todo',{date:'${iso}'})">
+      <div class="cal-num"><span>${d.getDate()}${!out&&d.getDate()===1?' '+MONTHS[d.getMonth()]:''}</span><button class="cal-add" title="Add a task due ${fmt(iso)}" onclick="openAdd('todo',{date:'${iso}'})">+</button></div>
+      ${shown.map(chip).join('')}
+      ${list.length>4?`<div class="cal-more" onclick="calToggleMore('${iso}')">${exp?'Show less':`+${list.length-4} more`}</div>`:''}
+    </div>`;
+  }
+  page.innerHTML=`
+    <div class="cal-toolbar">
+      <button class="cal-nav" onclick="stepMonth(-1)" title="Previous month ([)">‹</button>
+      <div class="cal-title">${MONTHS_LONG[m]} ${y}</div>
+      <button class="cal-nav" onclick="stepMonth(1)" title="Next month (])">›</button>
+      <button class="btn btn-g btn-sm" onclick="goToday()">Today</button>
+      <span class="cal-stat"><b>${scheduled}</b> scheduled · <b>${unscheduled.length}</b> unscheduled${other.length?` · <b>${other.length}</b> due in another month`:''}</span>
+      <span style="flex:1"></span>
+      <span class="cal-stat">Drag a task onto a day to reschedule · double-click a day to add</span>
+    </div>
+    <div class="cal-layout">
+      <div>
+        <div class="cal-grid" style="margin-bottom:4px">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div>
+        <div class="cal-grid">${days}</div>
+      </div>
+      <div class="cal-side">
+        <div class="cal-tray" ondragover="calOver(event,this)" ondragleave="calLeave(event,this)" ondrop="calDrop(event,'')">
+          <div class="cal-tray-title">Unscheduled <span>${unscheduled.length}</span></div>
+          ${unscheduled.length?unscheduled.map(chip).join(''):`<div class="cal-tray-hint">Every open task has a date. Drop a task here to clear its due date.</div>`}
+        </div>
+        ${other.length?`<div class="cal-tray"><div class="cal-tray-title">Due in another month <span>${other.length}</span></div>${other.map(chip).join('')}</div>`:''}
+      </div>
+    </div>`;
+}
+function calToggleMore(iso){ calExpanded.has(iso)?calExpanded.delete(iso):calExpanded.add(iso); renderCalendar(); }
+function calDragStart(e,cid,colId){ calDrag={cid,colId}; try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',cid); }catch(_){} setTimeout(()=>e.target.classList.add('dragging'),0); }
+function calDragEnd(){ calDrag=null; document.querySelectorAll('.cal-chip.dragging').forEach(c=>c.classList.remove('dragging')); document.querySelectorAll('.cal-day.over,.cal-tray.over').forEach(c=>c.classList.remove('over')); }
+function calOver(e,el){ if(!calDrag) return; e.preventDefault(); el.classList.add('over'); }
+function calLeave(e,el){ if(!el.contains(e.relatedTarget)) el.classList.remove('over'); }
+function calDrop(e,iso){
+  e.preventDefault(); const d=calDrag; calDragEnd(); if(!d) return;
+  const card=findCard(d.cid,d.colId); if(!card||(card.dueDate||'')===iso) return;
+  const old=card.dueDate||'';
+  card.dueDate=iso; card.updatedAt=new Date().toISOString();
+  logAct(card,iso?`Rescheduled to ${fmt(iso)}`:'Due date removed');
+  save(); renderCalendar();
+  toast(iso?`“${card.title}” now due ${fmt(iso)}`:`Due date cleared for “${card.title}”`,'ok',{label:'Undo',fn:()=>{ const c=locateCard(d.cid); if(!c) return; c.card.dueDate=old; logAct(c.card,old?`Rescheduled back to ${fmt(old)}`:'Due date removed'); save(); render(); }},4500);
+}
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — COMMAND PALETTE (Ctrl+K)
+═══════════════════════════════════════════════════ */
+let palItems=[], palIdx=0, palOpen=false;
+function palCommands(){
+  const light=document.documentElement.classList.contains('light');
+  const cmds=[
+    {icon:'＋',text:'New task',meta:'Opens the task form',key:'Ctrl N',run:()=>openAdd()},
+    {icon:'◈',text:'Go to Dashboard',key:'Alt 1',run:()=>nav('dashboard')},
+    {icon:'⊞',text:'Go to Task Board',key:'Alt 2',run:()=>nav('kanban')},
+    {icon:'☑',text:'Go to Task Checklist',key:'Alt 3',run:()=>nav('checklist')},
+    {icon:'▦',text:'Go to Calendar',key:'Alt 4',run:()=>nav('calendar')},
+    {icon:'📍',text:'Jump to today',meta:`${MONTHS_LONG[new Date().getMonth()]} ${new Date().getFullYear()}`,run:goToday},
+    {icon:light?'🌙':'☀️',text:light?'Switch to dark theme':'Switch to light theme',run:toggleTheme},
+    {icon:'⇤',text:uiPrefs.rail?'Expand sidebar':'Collapse sidebar',key:'Ctrl B',run:toggleRail},
+    {icon:'▥',text:uiPrefs.dense?'Comfortable cards':'Compact cards',meta:'Task Board density',run:toggleDensity},
+    {icon:'⬇',text:'Export to Excel',run:openExportPanel},
+    {icon:'🔄',text:'Month rollover',run:openMigratePanel},
+    {icon:'🏷',text:'Manage labels',run:openLabelManager},
+    {icon:'🎨',text:'Appearance',run:openAppearance},
+    {icon:'⌨',text:'Keyboard shortcuts',key:'?',run:openShortcuts},
+  ];
+  if(HAS_API) cmds.push({icon:'💾',text:'Backup now',key:'Ctrl Shift B',run:backupNowUI},{icon:'🗂',text:'Backup & restore',run:openBackupPanel});
+  MONTHS_LONG.forEach((ml,i)=>cmds.push({icon:'📅',text:`Open ${ml} ${curYear}`,meta:'Switch month',run:()=>switchMonth(i)}));
+  return cmds;
+}
+function palTasks(q){
+  const out=[]; const ql=q.toLowerCase();
+  yearsList().forEach(y=>{ const Y=db.years[y]; MONTHS.forEach((_,mi)=>{
+    COLS.forEach(c=>(Y.kanban[mi]?.[c.id]||[]).forEach(k=>{
+      const t=(k.title||'').toLowerCase();
+      let s=0; if(!ql) s=1; else if(t.startsWith(ql)) s=4; else if(t.includes(ql)) s=3; else if((k.desc||'').toLowerCase().includes(ql)) s=2; else if((k.subs||[]).some(x=>x.text.toLowerCase().includes(ql))) s=1;
+      if(!s) return; if(y===curYear&&mi===curMonth) s+=.5; if(!k.done) s+=.2;
+      out.push({icon:k.done?'✓':'○',text:k.title,meta:`${MONTHS[mi]} ${y} · ${c.label}`,score:s,ts:new Date(k.updatedAt||k.createdAt||0).getTime(),
+        run:()=>{ if(curYear!==y){curYear=y;YEAR=y;ensureYear(y);} curMonth=mi; buildMonthGrid(); nav('kanban'); openDetail(k.id,c.id); markFlash(k.id); }});
+    }));
+    (Y.checklist[mi]||[]).forEach(g=>g.tasks.forEach(t=>{
+      const tt=(t.title||'').toLowerCase(); let s=0; if(!ql) s=1; else if(tt.startsWith(ql)) s=4; else if(tt.includes(ql)) s=3; if(!s) return; if(y===curYear&&mi===curMonth) s+=.5;
+      out.push({icon:t.done?'☑':'☐',text:t.title,meta:`${MONTHS[mi]} ${y} · ${g.name}`,score:s,ts:0,
+        run:()=>{ if(curYear!==y){curYear=y;YEAR=y;ensureYear(y);} curMonth=mi; buildMonthGrid(); nav('checklist'); openClTaskEdit(g.id,t.id); }});
+    }));
+  }); });
+  return out.sort((a,b)=>b.score-a.score||b.ts-a.ts);
+}
+function hl(text,q){ const t=esc(text); if(!q) return t; const eq=esc(q); const i=t.toLowerCase().indexOf(eq.toLowerCase()); if(i<0) return t; return t.slice(0,i)+'<mark>'+t.slice(i,i+eq.length)+'</mark>'+t.slice(i+eq.length); }
+function ensurePalette(){
+  if(document.getElementById('palOverlay')) return;
+  const o=document.createElement('div'); o.className='pal-overlay'; o.id='palOverlay';
+  o.innerHTML=`<div class="pal" role="dialog" aria-label="Search and commands">
+    <div class="pal-head"><span class="ico">⌕</span><input class="pal-inp" id="palInp" placeholder="Search tasks across every month, or type a command…" autocomplete="off" oninput="palRender(this.value)" onkeydown="palKey(event)"/><span class="pk" style="font-size:.62rem;color:var(--text3);border:1px solid var(--border);border-radius:5px;padding:1px 6px">Esc</span></div>
+    <div class="pal-list" id="palList"></div>
+    <div class="pal-foot"><span><b>↑↓</b> move</span><span><b>Enter</b> open</span><span><b>Esc</b> close</span><span style="margin-left:auto">Tasks come from every month and year</span></div>
+  </div>`;
+  o.addEventListener('click',e=>{ if(e.target===o) closePalette(); });
+  document.body.appendChild(o);
+  const sk=document.createElement('div'); sk.className='overlay'; sk.id='kbdModal';
+  const row=(k,d)=>`<div class="kbd-row"><span>${d}</span><kbd>${k}</kbd></div>`;
+  sk.innerHTML=`<div class="modal" style="width:560px"><h2>Keyboard shortcuts</h2><div class="kbd-grid">
+    ${row('Ctrl K','Search & commands')}${row('Ctrl N','New task')}
+    ${row('Ctrl B','Collapse / expand sidebar')}${row('/','Focus board search')}
+    ${row('[  ]','Previous / next month')}${row('Alt 1–4','Dashboard · Board · Checklist · Calendar')}
+    ${row('Enter','Quick-add: save task')}${row('Shift Enter','Quick-add: open full form')}
+    ${row('Ctrl Enter','Save the open form')}${row('Esc','Close panel or form')}
+    ${row('?','This sheet')}${row('Ctrl Shift B','Backup now')}
+  </div>
+  <div style="font-size:.74rem;color:var(--text3);margin-top:14px;line-height:1.5">Quick-add syntax: <kbd>!high</kbd> <kbd>!low</kbd> priority · <kbd>#label</kbd> assigns (or creates) a label · <kbd>@tomorrow</kbd> <kbd>@fri</kbd> <kbd>@15</kbd> <kbd>@+3</kbd> <kbd>@2026-10-01</kbd> due date.</div>
+  <div class="modal-actions"><button class="btn btn-g" onclick="closeModal('kbdModal')">Close</button></div></div>`;
+  document.body.appendChild(sk);
+}
+function openPalette(){ ensurePalette(); palOpen=true; document.getElementById('palOverlay').classList.add('open'); const i=document.getElementById('palInp'); i.value=''; palRender(''); setTimeout(()=>i.focus(),20); }
+function closePalette(){ palOpen=false; document.getElementById('palOverlay')?.classList.remove('open'); }
+function openShortcuts(){ ensurePalette(); document.getElementById('kbdModal').classList.add('open'); }
+function palRender(q){
+  q=(q||'').trim(); const ql=q.toLowerCase();
+  const cmds=palCommands().filter(c=>!ql||c.text.toLowerCase().includes(ql)||(c.meta||'').toLowerCase().includes(ql));
+  const tasks=palTasks(q).slice(0,ql?12:6);
+  const cmdN=ql?Math.min(cmds.length,6):8;
+  palItems=[...tasks,...cmds.slice(0,cmdN)]; palIdx=0;
+  const list=document.getElementById('palList');
+  if(!palItems.length){ list.innerHTML=`<div class="pal-empty">No tasks or commands match “${esc(q)}”.<br>Press Enter to create a task with that title.</div>`; palItems=[{icon:'＋',text:`Create “${q}”`,run:()=>openAdd('todo',{title:q})}]; return; }
+  const item=(it,i)=>`<div class="pal-item ${i===palIdx?'active':''}" data-i="${i}" onmousemove="palHover(${i})" onclick="palGo(${i})"><span class="pi">${it.icon}</span><span class="pt">${hl(it.text,q)}</span>${it.meta?`<span class="pm">${esc(it.meta)}</span>`:''}${it.key?`<span class="pk">${it.key}</span>`:''}</div>`;
+  list.innerHTML=(tasks.length?`<div class="pal-sec">${ql?'Tasks':'Recently updated'}</div>`+tasks.map((t,i)=>item(t,i)).join(''):'')
+    +(cmdN?`<div class="pal-sec">Commands</div>`+cmds.slice(0,cmdN).map((c,i)=>item(c,tasks.length+i)).join(''):'');
+}
+function palHover(i){ if(i===palIdx) return; palIdx=i; document.querySelectorAll('.pal-item').forEach(el=>el.classList.toggle('active',+el.dataset.i===i)); }
+function palKey(e){
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){ e.preventDefault(); palIdx=(palIdx+(e.key==='ArrowDown'?1:-1)+palItems.length)%palItems.length;
+    document.querySelectorAll('.pal-item').forEach(el=>el.classList.toggle('active',+el.dataset.i===palIdx)); document.querySelector('.pal-item.active')?.scrollIntoView({block:'nearest'}); return; }
+  if(e.key==='Enter'){ e.preventDefault(); palGo(palIdx); }
+}
+function palGo(i){ const it=palItems[i]; if(!it) return; closePalette(); it.run(); }
+
+/* ═══════════════════════════════════════════════════
+   v2.1 — KEYBOARD
+═══════════════════════════════════════════════════ */
+function isTyping(el){ return el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.isContentEditable); }
+document.addEventListener('keydown',e=>{
+  const mod=e.ctrlKey||e.metaKey;
+  if(mod&&(e.key==='k'||e.key==='K')){ e.preventDefault(); palOpen?closePalette():openPalette(); return; }
+  if(mod&&(e.key==='b'||e.key==='B')&&!e.shiftKey){ e.preventDefault(); toggleRail(); return; }
+  if(e.key==='Escape'){ if(palOpen){ closePalette(); return; } document.querySelectorAll('.qa.open').forEach(q=>q.classList.remove('open')); return; }
+  if(e.altKey&&!mod&&['1','2','3','4'].includes(e.key)){ e.preventDefault(); nav(['dashboard','kanban','checklist','calendar'][+e.key-1]); return; }
+  if(isTyping(e.target)||document.querySelector('.overlay.open')||palOpen) return;
+  if(e.key==='['){ stepMonth(-1); return; }
+  if(e.key===']'){ stepMonth(1); return; }
+  if(e.key==='/'){ e.preventDefault(); const s=document.getElementById('kSearch'); if(curPage==='kanban'&&s) s.focus(); else openPalette(); return; }
+  if(e.key==='?'){ openShortcuts(); }
+});
+
 /* ═══════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════ */
 (async function init(){
-  loadTheme(); applyAppearance(loadAppearance());
+  loadTheme(); applyAppearance(loadAppearance()); loadUiPrefs();
   buildMonthGrid(); fillColSelect(); renderDash();
   await loadFromDisk();                  // may replace db with the newer on-disk copy
   applyAppearance(loadAppearance());

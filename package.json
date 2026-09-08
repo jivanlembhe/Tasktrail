@@ -1,7 +1,7 @@
 {
   "name": "flowboard-pro",
-  "version": "2.0.0",
-  "description": "TaskTrail — Task planner, to-do list & status tracker for Windows",
+  "version": "2.1.0",
+  "description": "TaskTrail \u2014 Task planner, to-do list & status tracker for Windows",
   "main": "main.js",
   "author": "FlowBoard",
   "license": "MIT",
@@ -17,7 +17,7 @@
   "build": {
     "appId": "com.flowboard.pro",
     "productName": "TaskTrail",
-    "copyright": "Copyright © 2026 FlowBoard",
+    "copyright": "Copyright \u00a9 2026 FlowBoard",
     "directories": {
       "output": "dist",
       "buildResources": "assets"
@@ -26,15 +26,27 @@
       "main.js",
       "preload.js",
       "src/**/*",
-      "package.json"
+      "package.json",
+      "assets/**/*"
     ],
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "requestedExecutionLevel": "asInvoker",
-      "publisherName": "FlowBoard"
+      "publisherName": "FlowBoard",
+      "icon": "assets/icon.ico"
     },
     "nsis": {
       "oneClick": false,
